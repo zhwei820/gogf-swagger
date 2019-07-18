@@ -1,6 +1,7 @@
-package ginSwagger
+package gogfSwagger
 
 import (
+	"github.com/gogf/gf/g/net/ghttp"
 	"html/template"
 	"os"
 	"regexp"
@@ -8,7 +9,7 @@ import (
 
 	"golang.org/x/net/webdav"
 
-	"github.com/gin-gonic/gin"
+	//"github.com/gin-gonic/gin"
 	"github.com/swaggo/swag"
 )
 
@@ -25,8 +26,8 @@ func URL(url string) func(c *Config) {
 	}
 }
 
-// WrapHandler wraps `http.Handler` into `gin.HandlerFunc`.
-func WrapHandler(h *webdav.Handler, confs ...func(c *Config)) gin.HandlerFunc {
+// WrapHandler wraps `http.Handler` into `func(r *ghttp.Request)`.
+func WrapHandler(h *webdav.Handler, confs ...func(c *Config)) func(r *ghttp.Request) {
 	defaultConfig := &Config{
 		URL: "doc.json",
 	}
@@ -38,24 +39,23 @@ func WrapHandler(h *webdav.Handler, confs ...func(c *Config)) gin.HandlerFunc {
 	return CustomWrapHandler(defaultConfig, h)
 }
 
-// CustomWrapHandler wraps `http.Handler` into `gin.HandlerFunc`
-func CustomWrapHandler(config *Config, h *webdav.Handler) gin.HandlerFunc {
+// CustomWrapHandler wraps `http.Handler` into `func(r *ghttp.Request)`
+func CustomWrapHandler(config *Config, h *webdav.Handler) func(r *ghttp.Request) {
 	//create a template with name
 	t := template.New("swagger_index.html")
 	index, _ := t.Parse(swagger_index_templ)
 
 	var rexp = regexp.MustCompile(`(.*)(index\.html|doc\.json|favicon-16x16\.png|favicon-32x32\.png|/oauth2-redirect\.html|swagger-ui\.css|swagger-ui\.css\.map|swagger-ui\.js|swagger-ui\.js\.map|swagger-ui-bundle\.js|swagger-ui-bundle\.js\.map|swagger-ui-standalone-preset\.js|swagger-ui-standalone-preset\.js\.map)[\?|.]*`)
 
-	return func(c *gin.Context) {
+	return func(r *ghttp.Request) {
 
 		type swaggerUIBundle struct {
 			URL string
 		}
 
 		var matches []string
-		if matches = rexp.FindStringSubmatch(c.Request.RequestURI); len(matches) != 3 {
-			c.Status(404)
-			c.Writer.Write([]byte("404 page not found"))
+		if matches = rexp.FindStringSubmatch(r.Request.RequestURI); len(matches) != 3 {
+			r.Response.WriteStatus(404, "404 page not found")
 			return
 		}
 		path := matches[2]
@@ -63,18 +63,18 @@ func CustomWrapHandler(config *Config, h *webdav.Handler) gin.HandlerFunc {
 		h.Prefix = prefix
 
 		if strings.HasSuffix(path, ".html") {
-			c.Header("Content-Type", "text/html; charset=utf-8")
+			r.Response.Header().Set("Content-Type", "text/html; charset=utf-8")
 		} else if strings.HasSuffix(path, ".css") {
-			c.Header("Content-Type", "text/css; charset=utf-8")
+			r.Response.Header().Set("Content-Type", "text/css; charset=utf-8")
 		} else if strings.HasSuffix(path, ".js") {
-			c.Header("Content-Type", "application/javascript")
+			r.Response.Header().Set("Content-Type", "application/javascript")
 		} else if strings.HasSuffix(path, ".json") {
-			c.Header("Content-Type", "application/json")
+			r.Response.Header().Set("Content-Type", "application/json")
 		}
 
 		switch path {
 		case "index.html":
-			index.Execute(c.Writer, &swaggerUIBundle{
+			index.Execute(r.Response.Writer, &swaggerUIBundle{
 				URL: config.URL,
 			})
 		case "doc.json":
@@ -82,23 +82,23 @@ func CustomWrapHandler(config *Config, h *webdav.Handler) gin.HandlerFunc {
 			if err != nil {
 				panic(err)
 			}
-			c.Writer.Write([]byte(doc))
+			r.Response.Writer.Write([]byte(doc))
 			return
 		default:
-			h.ServeHTTP(c.Writer, c.Request)
+			h.ServeHTTP(r.Response.Writer, r.Request)
 		}
 	}
 }
 
 // DisablingWrapHandler turn handler off
 // if specified environment variable passed
-func DisablingWrapHandler(h *webdav.Handler, envName string) gin.HandlerFunc {
+func DisablingWrapHandler(h *webdav.Handler, envName string) func(r *ghttp.Request) {
 	eFlag := os.Getenv(envName)
 	if eFlag != "" {
-		return func(c *gin.Context) {
+		return func(r *ghttp.Request) {
 			// Simulate behavior when route unspecified and
 			// return 404 HTTP code
-			c.String(404, "")
+			r.Response.WriteStatus(404, "")
 		}
 	}
 
@@ -107,13 +107,13 @@ func DisablingWrapHandler(h *webdav.Handler, envName string) gin.HandlerFunc {
 
 // DisablingCustomWrapHandler turn handler off
 // if specified environment variable passed
-func DisablingCustomWrapHandler(config *Config, h *webdav.Handler, envName string) gin.HandlerFunc {
+func DisablingCustomWrapHandler(config *Config, h *webdav.Handler, envName string) func(r *ghttp.Request) {
 	eFlag := os.Getenv(envName)
 	if eFlag != "" {
-		return func(c *gin.Context) {
+		return func(r *ghttp.Request) {
 			// Simulate behavior when route unspecified and
 			// return 404 HTTP code
-			c.String(404, "")
+			r.Response.WriteStatus(404, "")
 		}
 	}
 
