@@ -2,6 +2,7 @@
 
 gogf utility to automatically generate RESTful API documentation with Swagger 2.0.
 
+## Port from https://github.com/swaggo/gin-swagger
 
 ## Usage
 
