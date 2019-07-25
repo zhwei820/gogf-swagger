@@ -17,10 +17,9 @@ $ go get -u github.com/swaggo/swag/cmd/swag
 ```sh
 $ swag init
 ```
-4.Download [gogf-swagger](https://github.com/swaggo/gogf-swagger) by using:
+4.Download [gogf-swagger]() by using:
 ```sh
-$ go get -u github.com/swaggo/gogf-swagger
-$ go get -u github.com/swaggo/gogf-swagger/swaggerFiles
+$ go clone https://github.com/zhwei820/gogf-swagger.git
 ```
 And import following in your code:
 
