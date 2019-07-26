@@ -19,7 +19,7 @@ $ swag init
 ```
 4.Download [gogf-swagger]() by using:
 ```sh
-$ go clone https://github.com/zhwei820/gogf-swagger.git
+$ git clone https://github.com/zhwei820/gogf-swagger.git
 ```
 And import following in your code:
 
