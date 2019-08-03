@@ -1,6 +1,16 @@
+basePath: /
 info:
-  contact: {}
-  license: {}
+  contact:
+    email: hello@hello.io
+    name: hello
+    url: http://www.hello.io
+  description: This is a hello server .
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://hello.io/terms/
+  title: Swagger Example API
+  version: "1.0"
 paths:
   /:
     get:
@@ -10,6 +20,14 @@ paths:
           description: ok
           schema:
             type: string
+      security:
+      - ApiKeyAuth: []
       summary: hello接口
       tags:
       - hello
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

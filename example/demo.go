@@ -16,32 +16,32 @@ import (
 // @Tags hello
 // @Success 200 {string} string	"ok"
 // @router / [get]
+// @Security ApiKeyAuth
 func hello(r *ghttp.Request) {
 	r.Response.Writeln("哈喽世界！")
 }
 
 
-// @title Swagger Example API
-// @version 1.0
-// @description This is a hello server .
-// @termsOfService http://hello.io/terms/
-
-// @contact.name hello
-// @contact.url http://www.hello.io
-// @contact.email hello@hello.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host
-// @BasePath /
-func main() {
+func run() {
 	s := g.Server()
+
+	s.BindHookHandlerByMap("/*", map[string]ghttp.HandlerFunc{
+		"BeforeServe": func(r *ghttp.Request) {
+			r.Response.CORS(ghttp.CORSOptions{
+				AllowOrigin:      "*",
+				AllowMethods:     ghttp.HTTP_METHODS,
+				AllowCredentials: "true",
+				MaxAge:           3628800,
+				AllowHeaders:"*",
+			})
+		},
+	})
 	s.BindHandler("/", hello)
 
 	url := gogfSwagger.URL("http://localhost:8199/swagger/doc.json") //The url pointing to API definition
 	s.BindHandler("/swagger/*any", gogfSwagger.WrapHandler(swaggerFiles.Handler, url))
 
+	s.SetAccessLogEnabled(true)
 	s.SetPort(8199)
 	s.Run()
 }

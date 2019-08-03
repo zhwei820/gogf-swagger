@@ -1,11 +1,29 @@
 {
+    "swagger": "2.0",
     "info": {
-        "contact": {},
-        "license": {}
+        "description": "This is a hello server .",
+        "title": "Swagger Example API",
+        "termsOfService": "http://hello.io/terms/",
+        "contact": {
+            "name": "hello",
+            "url": "http://www.hello.io",
+            "email": "hello@hello.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
     },
+    "basePath": "/",
     "paths": {
         "/": {
             "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "hello接口",
                 "tags": [
                     "hello"
@@ -20,6 +38,13 @@
                     }
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }
