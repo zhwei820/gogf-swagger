@@ -1,4 +1,4 @@
-module github.com/swaggo/gogf-swagger
+module github.com/zhwei820/gogf-swagger
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751

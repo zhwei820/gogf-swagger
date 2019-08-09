@@ -19,13 +19,13 @@ $ swag init
 ```
 4.Download [gogf-swagger]() by using:
 ```sh
-$ go clone https://github.com/zhwei820/gogf-swagger.git
+$ git clone https://github.com/zhwei820/gogf-swagger.git
 ```
 And import following in your code:
 
 ```go
-import "github.com/swaggo/gogf-swagger" // gogf-swagger middleware
-import "github.com/swaggo/gogf-swagger/swaggerFiles" // swagger embed files
+import "github.com/zhwei820/gogf-swagger" // gogf-swagger middleware
+import "github.com/zhwei820/gogf-swagger/swaggerFiles" // swagger embed files
 
 ```
 
@@ -37,10 +37,10 @@ package main
 import (
 	"github.com/gogf/gf/g"
 	"github.com/gogf/gf/g/net/ghttp"
-	"github.com/swaggo/gogf-swagger"
-	"github.com/swaggo/gogf-swagger/swaggerFiles"
+	"github.com/zhwei820/gogf-swagger"
+	"github.com/zhwei820/gogf-swagger/swaggerFiles"
 
-    _ "github.com/swaggo/gogf-swagger/example/docs"
+    _ "github.com/zhwei820/gogf-swagger/example/docs"
 
 )
 

@@ -3,10 +3,10 @@ package main
 import (
 	"github.com/gogf/gf/g"
 	"github.com/gogf/gf/g/net/ghttp"
-	"github.com/swaggo/gogf-swagger"
-	"github.com/swaggo/gogf-swagger/swaggerFiles"
+	"github.com/zhwei820/gogf-swagger"
+	"github.com/zhwei820/gogf-swagger/swaggerFiles"
 
-	_ "github.com/swaggo/gogf-swagger/example/docs"
+	_ "github.com/zhwei820/gogf-swagger/example/docs"
 
 )
 
